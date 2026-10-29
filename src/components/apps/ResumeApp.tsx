@@ -26,7 +26,7 @@ export const ResumeApp: React.FC = () => {
             <Printer className="w-3.5 h-3.5" /> Print / Save PDF
           </button>
           <a
-            href="mailto:danis.devwork@gmail.com?subject=Freelance%20Opportunity"
+            href={`mailto:${personalInfo.email}?subject=Freelance%20Opportunity`}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold transition-colors"
           >
             <Download className="w-3.5 h-3.5" /> Request Official Copy

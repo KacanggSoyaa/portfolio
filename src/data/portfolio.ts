@@ -1,20 +1,20 @@
 import type { Project, Service, SkillCategory, Experience } from '../types';
 
 export const personalInfo = {
-  name: 'Danis',
-  title: 'Web Developer & IT Specialist',
-  status: '🟢 Available for Freelance & Contract Projects',
-  bio: 'Diploma in IT (Software and Applications Development) graduate completing an internship with a passion for crafting fast, responsive, and intuitive web experiences. Specializing in modern web development, UI/UX implementation, and IT deployment solutions.',
+  name: 'Danis Nazri',
+  title: 'Full-Stack Web Developer & IT Solutions Specialist',
+  status: 'Available for Select Freelance & Contract Projects',
+  bio: 'Information Technology graduate (Diploma in Software & Applications Development) combining modern web engineering with robust IT systems infrastructure. Specializing in high-performance web applications, responsive landing pages, and cloud deployment pipelines.',
   location: 'Kuala Lumpur, Malaysia (Open to Global Remote)',
   email: 'danisnazri9@gmail.com',
-  whatsapp: '+601139556225', // customizable
+  whatsapp: '+601139556225',
   github: 'https://github.com/KacanggSoyaa',
   linkedin: 'https://linkedin.com/in/danisdev',
   education: {
-    degree: 'Diploma in Information Technology',
+    degree: 'Diploma in Information Technology (Software & Applications)',
     school: 'Polytechnic Ungku Omar (PUO), Malaysia',
     period: '2023 - 2026',
-    status: 'Final Year / Internship Completion Phase',
+    status: 'Graduating Class / Internship Completion Phase',
   },
 };
 

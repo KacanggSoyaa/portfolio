@@ -144,6 +144,15 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           <Sparkles className="w-3 h-3" /> Hire Me
         </button>
+
+        {/* Exit to Portfolio Website */}
+        <a
+          href="/"
+          className="hidden sm:flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] px-2.5 py-0.5 rounded-md border border-slate-700 transition-colors"
+          title="Return to standard website portfolio"
+        >
+          Web View &rarr;
+        </a>
       </div>
     </header>
   );

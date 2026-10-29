@@ -7,9 +7,42 @@ interface Props {
 }
 
 const {
-  title = "Danis — Freelance Web Developer & IT Specialist",
-  description = "Portfolio of Danis, an IT diploma graduate and freelance web developer crafting high-performance, modern websites."
+  title = "Danis Nazri — Full-Stack Web Developer & IT Solutions Specialist",
+  description = "Portfolio of Danis Nazri, an IT graduate and full-stack web developer crafting high-performance, conversion-focused websites and cloud infrastructure."
 } = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Danis Nazri",
+  "jobTitle": "Full-Stack Web Developer & IT Solutions Specialist",
+  "url": "https://danisnazri.dev",
+  "email": "danisnazri9@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Kuala Lumpur",
+    "addressCountry": "Malaysia"
+  },
+  "alumniOf": {
+    "@type": "EducationalOrganization",
+    "name": "Polytechnic Ungku Omar (PUO), Malaysia"
+  },
+  "knowsAbout": [
+    "Web Development",
+    "Astro",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Cloudflare",
+    "DNS Management",
+    "Linux Systems"
+  ],
+  "sameAs": [
+    "https://github.com/KacanggSoyaa",
+    "https://linkedin.com/in/danisdev"
+  ]
+};
 ---
 
 <!doctype html>
@@ -22,6 +55,7 @@ const {
     
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Danis Nazri" />
 
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website" />
@@ -30,6 +64,9 @@ const {
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <!-- Modern Typography Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

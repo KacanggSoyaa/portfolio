@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../data/portfolio';
-import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck, Sparkles } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { playClick, playSuccess } from '../utils/sound';
+import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
 
 interface ContactSectionProps {
   selectedService?: string;
@@ -20,8 +18,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const cleanWaNumber = personalInfo.whatsapp.replace(/\D/g, '');
+
   const handleCopyEmail = () => {
-    playClick();
     navigator.clipboard.writeText(personalInfo.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -29,70 +28,66 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    playSuccess();
-
-    confetti({
-      particleCount: 100,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#06b6d4', '#3b82f6', '#10b981'],
-    });
-
     setSubmitted(true);
   };
 
-  const whatsappMessage = encodeURIComponent(
-    `Hi Danis! I saw your portfolio and would like to discuss a freelance project (${formData.service}).`
-  );
+  const whatsappInquiryUrl = `https://wa.me/${cleanWaNumber}?text=${encodeURIComponent(
+    `Hi Danis! My name is ${formData.name || 'there'}. I would like to inquire about ${formData.service}. Details: ${formData.message || 'Looking for a project consultation.'}`
+  )}`;
+
+  const mailtoInquiryUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
+    `Project Inquiry: ${formData.service} (${formData.name})`
+  )}&body=${encodeURIComponent(
+    `Hi Danis,\n\nName: ${formData.name}\nEmail: ${formData.email}\nService: ${formData.service}\nBudget: ${formData.budget}\n\nProject Details:\n${formData.message}\n`
+  )}`;
 
   return (
-    <section id="contact" className="py-14 md:py-16 relative bg-slate-900/40">
+    <section id="contact" className="py-16 md:py-20 relative bg-slate-900/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/70 border border-cyan-800/50 text-cyan-400">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-slate-900 border border-slate-800 text-slate-300">
             Get in Touch
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Start Your Project or Request a Free Quote
+            Start Your Project or Request a Free Consultation
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300">
-            Have an idea in mind, need a consultation, or looking for a developer? Send a message below or chat directly on WhatsApp.
+          <p className="text-xs sm:text-sm text-slate-400">
+            Have a project in mind, need a speed audit, or looking for an experienced developer? Drop a message below or chat directly on WhatsApp.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto">
           {/* Direct Channels Column */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="p-6 rounded-3xl bg-slate-900/70 border border-slate-800 space-y-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 font-mono">
-                Direct Contact Channels
+            <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-lg">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                Direct Channels
               </h3>
 
               {/* WhatsApp Quick Chat */}
               <a
-                href={`https://wa.me/60123456789?text=${whatsappMessage}`}
+                href={`https://wa.me/${cleanWaNumber}?text=${encodeURIComponent("Hi Danis, I saw your portfolio and would like to discuss a project.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => playClick()}
-                className="flex items-center justify-between p-4 rounded-2xl bg-emerald-950/30 border border-emerald-800/50 hover:bg-emerald-900/40 transition-colors group"
+                className="flex items-center justify-between p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-emerald-700/60 transition-all group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-emerald-900/60 text-emerald-400 group-hover:scale-110 transition-transform">
+                  <div className="p-2.5 rounded-lg bg-emerald-950/70 border border-emerald-800/60 text-emerald-400">
                     <MessageCircle className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-xs font-bold text-white">WhatsApp Chat</div>
-                    <div className="text-[11px] text-emerald-400">Fast direct reply</div>
+                    <div className="text-[11px] text-emerald-400">{personalInfo.whatsapp}</div>
                   </div>
                 </div>
-                <span className="text-xs font-medium text-emerald-400 group-hover:translate-x-1 transition-transform">
-                  Message &rarr;
+                <span className="text-xs font-medium text-slate-400 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all">
+                  Chat &rarr;
                 </span>
               </a>
 
               {/* Email Copy Card */}
-              <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-2">
+              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-slate-400 flex items-center gap-1.5">
                     <Mail className="w-4 h-4 text-cyan-400" /> Email Address
@@ -103,7 +98,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                   >
                     {copied ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" /> Copied!
+                        <Check className="w-3.5 h-3.5 text-emerald-400" /> Copied
                       </>
                     ) : (
                       <>
@@ -112,12 +107,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                     )}
                   </button>
                 </div>
-                <div className="font-mono text-xs text-slate-200 select-all bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <a
+                  href={`mailto:${personalInfo.email}`}
+                  className="font-mono text-xs text-slate-200 block hover:text-cyan-400 transition-colors"
+                >
                   {personalInfo.email}
-                </div>
+                </a>
               </div>
 
-              {/* Assurances */}
+              {/* Guarantees */}
               <div className="space-y-2.5 pt-2 border-t border-slate-800/80">
                 <div className="flex items-center gap-2 text-xs text-slate-300">
                   <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
@@ -125,18 +123,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-300">
                   <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Free consultation & project proposal</span>
+                  <span>Free discovery review &amp; fixed estimates</span>
                 </div>
               </div>
             </div>
 
             {/* Social Links */}
-            <div className="p-4 rounded-2xl bg-slate-900/40 border border-slate-800 flex justify-around text-xs">
+            <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex justify-around text-xs">
               <a
                 href={personalInfo.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-cyan-400 transition-colors"
+                className="text-slate-400 hover:text-white transition-colors"
               >
                 GitHub Profile &rarr;
               </a>
@@ -145,7 +143,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                 href={personalInfo.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-slate-400 hover:text-cyan-400 transition-colors"
+                className="text-slate-400 hover:text-white transition-colors"
               >
                 LinkedIn Profile &rarr;
               </a>
@@ -155,28 +153,46 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
           {/* Interactive Form Column */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="p-8 sm:p-10 rounded-3xl bg-slate-900/80 border border-cyan-800/60 text-center space-y-4 shadow-xl">
-                <div className="w-16 h-16 rounded-full bg-cyan-950 border border-cyan-500/50 flex items-center justify-center mx-auto text-cyan-400">
-                  <CheckCircle2 className="w-9 h-9" />
+              <div className="p-8 sm:p-10 rounded-2xl bg-slate-900/90 border border-slate-800 text-center space-y-5 shadow-xl">
+                <div className="w-14 h-14 rounded-full bg-emerald-950 border border-emerald-700/60 flex items-center justify-center mx-auto text-emerald-400">
+                  <CheckCircle2 className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-bold text-white">Inquiry Sent Successfully!</h3>
-                <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong className="text-white">{formData.name}</strong>. I've received your inquiry regarding <em>{formData.service}</em> and will follow up directly at <strong>{formData.email}</strong> within 2-4 hours.
-                </p>
+                <div className="space-y-1">
+                  <h3 className="text-xl font-bold text-white">Inquiry Details Prepared!</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+                    Thank you, <strong className="text-white">{formData.name}</strong>. Choose your preferred channel below to send this directly for immediate review:
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                  <a
+                    href={whatsappInquiryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2.5 px-5 rounded-xl transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Send via WhatsApp
+                  </a>
+
+                  <a
+                    href={mailtoInquiryUrl}
+                    className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 px-5 rounded-xl border border-slate-700 transition-all"
+                  >
+                    <Mail className="w-4 h-4" /> Open in Email App
+                  </a>
+                </div>
+
                 <button
-                  onClick={() => {
-                    playClick();
-                    setSubmitted(false);
-                  }}
-                  className="mt-4 text-xs text-slate-400 hover:text-white underline"
+                  onClick={() => setSubmitted(false)}
+                  className="mt-4 text-xs text-slate-400 hover:text-white underline block mx-auto"
                 >
-                  Send another inquiry
+                  Edit message
                 </button>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="p-6 sm:p-8 rounded-3xl bg-slate-900/70 border border-slate-800 space-y-4 shadow-xl"
+                className="p-6 sm:p-8 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-xl"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -214,9 +230,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                     >
                       <option>High-Converting Landing Pages</option>
                       <option>Custom Web Applications</option>
-                      <option>Website Redesign & Speed Optimization</option>
-                      <option>IT Setup & Cloud Deployment</option>
-                      <option>Other / General Inquiry</option>
+                      <option>Website Redesign &amp; Speed Optimization</option>
+                      <option>IT Setup &amp; Cloud Deployment</option>
+                      <option>General Consultation / Other</option>
                     </select>
                   </div>
 
@@ -230,18 +246,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                       <option>&lt; $200 (Small Task / Fix)</option>
                       <option>$200 - $500 (Landing Page)</option>
                       <option>$500 - $1,500 (Web Application)</option>
-                      <option>$1,500+ (Comprehensive Project)</option>
-                      <option>Flexible / Looking for advice</option>
+                      <option>$1,500+ (Custom Enterprise Project)</option>
+                      <option>Flexible / To be discussed</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Project Scope & Details</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Project Brief &amp; Goals</label>
                   <textarea
                     required
                     rows={4}
-                    placeholder="Tell me about your business, reference websites, or deadlines..."
+                    placeholder="Briefly describe your project, timeline, or current website challenges..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
@@ -250,9 +266,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
 
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 transition-all hover:scale-[1.01]"
+                  className="w-full py-3 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:shadow-cyan-500/20 transition-all"
                 >
-                  <Send className="w-4 h-4" /> Send Inquiry & Get Free Quote
+                  <Send className="w-4 h-4" /> Submit Inquiry &amp; Request Free Quote
                 </button>
               </form>
             )}

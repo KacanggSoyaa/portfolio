@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Search, Sparkles, Terminal, Menu, X } from 'lucide-react';
-import { isSoundEnabled, toggleSound, playClick } from '../utils/sound';
+import { Search, ArrowUpRight, Menu, X } from 'lucide-react';
+import { personalInfo } from '../data/portfolio';
 
 interface NavbarProps {
   onOpenPalette: () => void;
-  onOpenTerminalModal?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette, onOpenTerminalModal }) => {
-  const [soundOn, setSoundOn] = useState<boolean>(true);
+export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    setSoundOn(isSoundEnabled());
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -23,103 +19,89 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette, onOpenTerminalMod
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSoundToggle = () => {
-    const newState = toggleSound();
-    setSoundOn(newState);
-    if (newState) playClick();
-  };
-
   const navLinks = [
-    { label: 'Terminal', href: '#terminal' },
     { label: 'Services', href: '#services' },
-    { label: 'Projects', href: '#projects' },
+    { label: 'Work', href: '#projects' },
     { label: 'About', href: '#about' },
+    { label: 'Experience', href: '#experience' },
     { label: 'Contact', href: '#contact' },
   ];
 
   return (
-    <nav
+    <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 shadow-lg py-3'
+          ? 'bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 shadow-md py-3'
           : 'bg-transparent py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Logo */}
+        {/* Brand */}
         <a
           href="#"
-          onClick={() => playClick()}
-          className="flex items-center gap-2 group text-white font-bold text-base sm:text-lg tracking-tight"
+          className="flex items-center gap-3 group text-white font-medium text-sm tracking-tight"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-mono text-sm font-extrabold group-hover:scale-105 transition-transform shadow-md shadow-cyan-500/20">
-            &lt;D/&gt;
+          <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-cyan-500/50 flex items-center justify-center font-mono text-xs font-bold text-cyan-400 transition-colors">
+            DN
           </div>
-          <span className="font-mono">Danis<span className="text-cyan-400">.dev</span></span>
+          <div className="flex flex-col">
+            <span className="font-semibold text-slate-100 group-hover:text-cyan-400 transition-colors">
+              {personalInfo.name}
+            </span>
+            <span className="text-[11px] text-slate-400 font-normal">
+              Web Developer &bull; IT Specialist
+            </span>
+          </div>
         </a>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center space-x-1 bg-slate-900/60 backdrop-blur border border-slate-800/80 px-4 py-1.5 rounded-full">
+        <nav className="hidden md:flex items-center space-x-1 bg-slate-900/70 backdrop-blur border border-slate-800/80 px-4 py-1.5 rounded-full">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              onClick={() => playClick()}
-              className="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/70 rounded-full transition-all"
+              className="px-3.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-full transition-colors"
             >
               {link.label}
             </a>
           ))}
-        </div>
+        </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Live Status Badge */}
-          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/70 border border-emerald-800/50 text-[11px] text-emerald-400 font-medium">
+        <div className="flex items-center space-x-3">
+          {/* Availability Status Badge */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Available for Hire</span>
+            <span>Available for Projects</span>
           </div>
 
-          {/* Search / Command Palette Shortcut */}
+          {/* Command Palette Trigger */}
           <button
-            onClick={() => {
-              playClick();
-              onOpenPalette();
-            }}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition-all text-xs"
+            onClick={onOpenPalette}
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-all text-xs"
             title="Search or Quick Jump (Ctrl+K)"
+            aria-label="Open Command Palette"
           >
-            <Search className="w-3.5 h-3.5 text-cyan-400" />
+            <Search className="w-3.5 h-3.5 text-slate-400" />
             <kbd className="hidden sm:inline px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-400">
               Ctrl+K
             </kbd>
           </button>
 
-          {/* Sound Toggle */}
-          <button
-            onClick={handleSoundToggle}
-            className="p-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-colors"
-            title={soundOn ? 'Mute Sound FX' : 'Enable Sound FX'}
-          >
-            {soundOn ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
-          </button>
-
-          {/* Hire Me CTA Button */}
+          {/* Primary CTA */}
           <a
             href="#contact"
-            onClick={() => playClick()}
-            className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-lg shadow-md shadow-cyan-500/20 transition-all hover:scale-105"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs px-4 py-2 rounded-lg transition-all shadow-sm hover:shadow-cyan-500/20"
           >
-            <Sparkles className="w-3.5 h-3.5" /> Hire Me
+            <span>Let's Talk</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
 
           {/* Mobile Menu Toggle */}
           <button
-            onClick={() => {
-              playClick();
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
-            className="md:hidden p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -128,32 +110,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette, onOpenTerminalMod
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-950 border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 mt-2">
+        <div className="md:hidden bg-slate-950/95 backdrop-blur-lg border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 mt-2">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              onClick={() => {
-                playClick();
-                setMobileMenuOpen(false);
-              }}
-              className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
             >
               {link.label}
             </a>
           ))}
           <a
             href="#contact"
-            onClick={() => {
-              playClick();
-              setMobileMenuOpen(false);
-            }}
-            className="block text-center mt-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs py-2.5 rounded-lg"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-center mt-3 bg-cyan-500 text-slate-950 font-semibold text-xs py-2.5 rounded-lg transition-colors"
           >
-            Hire Me &rarr;
+            Get in Touch &rarr;
           </a>
         </div>
       )}
-    </nav>
+    </header>
   );
 };

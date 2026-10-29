@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Desktop } from '../components/os/Desktop';
+---
+
+<Layout title="DanisOS — Interactive Web Desktop Experience">
+  <Desktop client:only="react" />
+</Layout>

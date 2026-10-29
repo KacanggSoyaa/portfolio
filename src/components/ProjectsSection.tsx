@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { projects } from '../data/portfolio';
-import type { Project } from '../types';
-import { ExternalLink, Filter, Sparkles, CheckCircle2, Search, ArrowRight } from 'lucide-react';
-import { playClick } from '../utils/sound';
+import { ExternalLink, Search, ArrowUpRight } from 'lucide-react';
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -26,19 +24,19 @@ export const ProjectsSection: React.FC = () => {
   });
 
   return (
-    <section id="projects" className="py-14 md:py-16 relative bg-slate-900/30">
+    <section id="projects" className="py-16 md:py-20 relative bg-slate-900/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/70 border border-cyan-800/50 text-cyan-400">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-slate-900 border border-slate-800 text-slate-300">
               Proof of Work
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Featured Web Projects & Case Studies
+              Selected Projects &amp; Case Studies
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300">
-              Each project is built around real client challenges, high-speed user experiences, and maintainable software architecture.
+            <p className="text-xs sm:text-sm text-slate-400">
+              Real-world software built with attention to performance metrics, user experience, and scalable cloud infrastructure.
             </p>
           </div>
 
@@ -48,10 +46,7 @@ export const ProjectsSection: React.FC = () => {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => {
-                    playClick();
-                    setSelectedCategory(cat);
-                  }}
+                  onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
                     selectedCategory === cat
                       ? 'bg-cyan-500 text-slate-950 font-semibold shadow-sm'
@@ -81,7 +76,7 @@ export const ProjectsSection: React.FC = () => {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-xl group"
+              className="rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 overflow-hidden flex flex-col justify-between transition-all duration-200 shadow-xl group"
             >
               {/* Project Visual / Thumbnail */}
               <div className="relative aspect-[16/9] overflow-hidden bg-slate-950">
@@ -91,7 +86,7 @@ export const ProjectsSection: React.FC = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono border border-slate-700/80 text-cyan-300">
+                <div className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono border border-slate-800 text-slate-300">
                   {project.category}
                 </div>
               </div>
@@ -110,13 +105,13 @@ export const ProjectsSection: React.FC = () => {
 
                   {/* Problem & Solution Box */}
                   <div className="space-y-2 pt-2 border-t border-slate-800/80">
-                    <div className="p-3 rounded-xl bg-red-950/20 border border-red-900/30 text-xs">
-                      <strong className="text-red-400 font-semibold block mb-0.5">The Challenge:</strong>
+                    <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
+                      <strong className="text-slate-400 font-semibold block mb-0.5">The Challenge:</strong>
                       <span className="text-slate-300">{project.problem}</span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-900/30 text-xs">
-                      <strong className="text-emerald-400 font-semibold block mb-0.5">Engineered Solution:</strong>
+                    <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-900/30 text-xs">
+                      <strong className="text-cyan-400 font-semibold block mb-0.5">Engineered Solution:</strong>
                       <span className="text-slate-300">{project.solution}</span>
                     </div>
                   </div>
@@ -126,7 +121,7 @@ export const ProjectsSection: React.FC = () => {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-800/90 text-cyan-300 border border-cyan-900/40"
+                        className="text-xs font-mono px-2.5 py-1 rounded-md bg-slate-800/90 text-slate-300 border border-slate-700"
                       >
                         {tag}
                       </span>
@@ -142,9 +137,10 @@ export const ProjectsSection: React.FC = () => {
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs py-2 px-3.5 rounded-lg transition-all shadow-md shadow-cyan-500/20"
+                        className="flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs py-2 px-3.5 rounded-lg transition-all"
                       >
-                        <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                        <span>Live Demo</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </a>
                     )}
                     {project.githubUrl && (
@@ -154,17 +150,16 @@ export const ProjectsSection: React.FC = () => {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs py-2 px-3.5 rounded-lg border border-slate-700 transition-colors"
                       >
-                        <GithubIcon className="w-3.5 h-3.5" /> GitHub
+                        <GithubIcon className="w-3.5 h-3.5" /> Source
                       </a>
                     )}
                   </div>
 
                   <a
                     href="#contact"
-                    onClick={() => playClick()}
-                    className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-medium transition-colors"
+                    className="text-xs text-slate-400 hover:text-cyan-400 flex items-center gap-1 font-medium transition-colors"
                   >
-                    Build something like this &rarr;
+                    Discuss similar project &rarr;
                   </a>
                 </div>
               </div>

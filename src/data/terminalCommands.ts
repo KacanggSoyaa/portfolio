@@ -1,3 +1,5 @@
+import { personalInfo } from './portfolio';
+
 export interface CommandOutput {
   type: 'text' | 'success' | 'error' | 'info' | 'ascii' | 'list';
   content: string | string[];
@@ -121,10 +123,10 @@ export const handleCommand = (cmd: string): { output: CommandOutput; action?: st
           type: 'success',
           content: [
             "📬 Direct Inquiries:",
-            "  Email:    danis.devwork@gmail.com",
-            "  WhatsApp: +60123456789",
-            "  LinkedIn: linkedin.com/in/danisdev",
-            "  GitHub:   github.com/danisdev",
+            `  Email:    ${personalInfo.email}`,
+            `  WhatsApp: ${personalInfo.whatsapp}`,
+            `  LinkedIn: ${personalInfo.linkedin}`,
+            `  GitHub:   ${personalInfo.github}`,
           ],
         },
       };

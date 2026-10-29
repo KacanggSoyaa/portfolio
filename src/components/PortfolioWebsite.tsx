@@ -4,6 +4,7 @@ import { Hero } from './Hero';
 import { ServicesSection } from './ServicesSection';
 import { ProjectsSection } from './ProjectsSection';
 import { AboutSection } from './AboutSection';
+import { ExperienceSection } from './ExperienceSection';
 import { ContactSection } from './ContactSection';
 import { Footer } from './Footer';
 import { CommandPalette } from './CommandPalette';
@@ -49,6 +50,7 @@ export const PortfolioWebsite: React.FC = () => {
         <ServicesSection onSelectService={handleSelectService} />
         <ProjectsSection />
         <AboutSection />
+        <ExperienceSection />
         <ContactSection selectedService={selectedService} />
       </main>
 
