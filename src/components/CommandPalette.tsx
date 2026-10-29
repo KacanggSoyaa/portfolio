@@ -1,77 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Search, Sparkles, FolderGit2, Layers, User, Briefcase, ExternalLink, Copy, Check, MessageSquare, X } from 'lucide-react';
 import { personalInfo } from '../data/portfolio';
 import { whatsappUrl } from '../utils/contact';
+import { useCommandPalette, type PaletteItem } from '../hooks/useCommandPalette';
 
 interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface PaletteAction {
-  id: string;
-  title: string;
-  category: 'Navigation' | 'Actions' | 'Social';
+interface PaletteAction extends PaletteItem {
   icon: React.ReactNode;
-  perform: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose }) => {
-  const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-  const onCloseRef = useRef(onClose);
-
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    previousFocusRef.current = document.activeElement as HTMLElement | null;
-    setQuery('');
-    setSelectedIndex(0);
-    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onCloseRef.current();
-        return;
-      }
-      if (e.key !== 'Tab' || !dialogRef.current) return;
-
-      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable.length === 0) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleGlobalKeyDown);
-
-    return () => {
-      clearTimeout(focusTimer);
-      document.removeEventListener('keydown', handleGlobalKeyDown);
-      document.body.style.overflow = previousOverflow;
-      previousFocusRef.current?.focus();
-    };
-  }, [isOpen]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -166,27 +109,17 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
     },
   ];
 
-  const filtered = actions.filter((act) =>
-    act.title.toLowerCase().includes(query.toLowerCase()) ||
-    act.category.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % (filtered.length || 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filtered.length) % (filtered.length || 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filtered[selectedIndex]) {
-        filtered[selectedIndex].perform();
-      }
-    } else if (e.key === 'Escape') {
-      onClose();
-    }
-  };
+  const {
+    query,
+    setQuery,
+    selectedIndex,
+    setSelectedIndex,
+    filtered,
+    inputRef,
+    dialogRef,
+    handleKeyDown,
+    select,
+  } = useCommandPalette({ isOpen, onClose, items: actions });
 
   if (!isOpen) return null;
 
@@ -218,10 +151,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             }
             placeholder="Type a command or jump to section..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSelectedIndex(0);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
           />
@@ -248,7 +178,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
                 id={`palette-option-${action.id}`}
                 role="option"
                 aria-selected={idx === selectedIndex}
-                onClick={() => action.perform()}
+                onClick={() => select(action)}
                 onMouseEnter={() => setSelectedIndex(idx)}
                 className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left text-xs transition-colors ${
                   idx === selectedIndex

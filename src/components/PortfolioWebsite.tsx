@@ -53,7 +53,7 @@ export const PortfolioWebsite: React.FC = () => {
 
       {/* Main Page Flow */}
       <main id="main-content" className="relative z-10">
-        <Hero onOpenPalette={() => setPaletteOpen(true)} />
+        <Hero />
         <ServicesSection onSelectService={handleSelectService} />
         <ProjectsSection />
         <AboutSection />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { projects } from '../../data/portfolio';
 import type { Project } from '../../types';
-import { ExternalLink, Filter, Sparkles, CheckCircle2, Search, Code2 } from 'lucide-react';
+import { ExternalLink, Filter, Sparkles, CheckCircle2, Search } from 'lucide-react';
 import { playClick } from '../../utils/sound';
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = "w-3.5 h-3.5" }) => (

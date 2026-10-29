@@ -12,3 +12,21 @@ export const emailUrl = (subject?: string, body?: string) => {
   const query = params.toString();
   return `mailto:${personalInfo.email}${query ? `?${query}` : ''}`;
 };
+
+export interface InquiryDetails {
+  name: string;
+  email: string;
+  service: string;
+  budget: string;
+  message: string;
+}
+
+export const buildInquiryLinks = (details: InquiryDetails) => ({
+  whatsapp: whatsappUrl(
+    `Hi Danis! My name is ${details.name || 'there'}. I would like to inquire about ${details.service}. Details: ${details.message || 'Looking for a project consultation.'}`
+  ),
+  email: emailUrl(
+    `Project Inquiry: ${details.service} (${details.name})`,
+    `Hi Danis,\n\nName: ${details.name}\nEmail: ${details.email}\nService: ${details.service}\nBudget: ${details.budget}\n\nProject Details:\n${details.message}\n`
+  ),
+});

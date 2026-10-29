@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import type { AppId } from '../../types';
-import { Search, Sparkles, FolderGit2, Layers, User, MessageSquare, Terminal, FileText, ExternalLink, Copy, Check, Volume2 } from 'lucide-react';
+import { Search, Sparkles, FolderGit2, Layers, User, Terminal, FileText, ExternalLink, Copy, Check, Volume2 } from 'lucide-react';
 import { personalInfo } from '../../data/portfolio';
 import { whatsappUrl } from '../../utils/contact';
 import { playClick, toggleSound } from '../../utils/sound';
+import { useCommandPalette, type PaletteItem } from '../../hooks/useCommandPalette';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -12,12 +13,8 @@ interface CommandPaletteProps {
   onHireClick: () => void;
 }
 
-interface PaletteAction {
-  id: string;
-  title: string;
-  category: 'Applications' | 'Actions' | 'Projects' | 'Links';
+interface PaletteAction extends PaletteItem {
   icon: React.ReactNode;
-  perform: () => void;
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -26,33 +23,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   onOpenApp,
   onHireClick,
 }) => {
-  const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const onCloseRef = useRef(onClose);
-
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    setQuery('');
-    setSelectedIndex(0);
-    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
-
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCloseRef.current();
-    };
-    document.addEventListener('keydown', handleGlobalKeyDown);
-
-    return () => {
-      clearTimeout(focusTimer);
-      document.removeEventListener('keydown', handleGlobalKeyDown);
-    };
-  }, [isOpen]);
 
   const actions: PaletteAction[] = [
     {
@@ -158,28 +129,22 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
   ];
 
-  const filtered = actions.filter((act) =>
-    act.title.toLowerCase().includes(query.toLowerCase()) ||
-    act.category.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose();
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % Math.max(1, filtered.length));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filtered.length) % Math.max(1, filtered.length));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filtered[selectedIndex]) {
-        playClick();
-        filtered[selectedIndex].perform();
-      }
-    }
-  };
+  const {
+    query,
+    setQuery,
+    selectedIndex,
+    setSelectedIndex,
+    filtered,
+    inputRef,
+    dialogRef,
+    handleKeyDown,
+    select,
+  } = useCommandPalette({
+    isOpen,
+    onClose,
+    items: actions,
+    onActivate: () => playClick(),
+  });
 
   if (!isOpen) return null;
 
@@ -189,6 +154,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-20 px-4 animate-in fade-in duration-150"
     >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="DanisOS command palette"
@@ -201,12 +167,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="os-palette-results"
+            aria-label="Search commands"
+            aria-activedescendant={
+              filtered[selectedIndex] ? `os-palette-option-${filtered[selectedIndex].id}` : undefined
+            }
             placeholder="Type a command, project, or search actions..."
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSelectedIndex(0);
-            }}
+            onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             className="w-full bg-transparent text-sm text-white placeholder-slate-500 outline-none"
           />
@@ -216,7 +186,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Results List */}
-        <div className="max-h-80 overflow-y-auto p-2 space-y-1">
+        <div
+          id="os-palette-results"
+          role="listbox"
+          aria-label="Commands"
+          className="max-h-80 overflow-y-auto p-2 space-y-1"
+        >
           {filtered.length === 0 ? (
             <div className="text-center py-8 text-xs text-slate-500">
               No matching commands found.
@@ -227,10 +202,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               return (
                 <div
                   key={item.id}
-                  onClick={() => {
-                    playClick();
-                    item.perform();
-                  }}
+                  id={`os-palette-option-${item.id}`}
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => select(item)}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer text-xs transition-colors ${
                     isSelected

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../../data/portfolio';
-import { whatsappUrl } from '../../utils/contact';
+import { buildInquiryLinks, whatsappUrl } from '../../utils/contact';
 import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
 import { playClick } from '../../utils/sound';
 
@@ -23,21 +23,13 @@ export const ContactApp: React.FC = () => {
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     playClick();
     setSubmitted(true);
   };
 
-  const whatsappInquiryUrl = whatsappUrl(
-    `Hi Danis! My name is ${formData.name || 'there'}. I would like to discuss ${formData.service}. Details: ${formData.message || 'Looking for a project consultation.'}`
-  );
-
-  const mailtoInquiryUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
-    `Project Inquiry: ${formData.service} (${formData.name})`
-  )}&body=${encodeURIComponent(
-    `Hi Danis,\n\nName: ${formData.name}\nEmail: ${formData.email}\nService: ${formData.service}\nBudget: ${formData.budget}\n\nProject Details:\n${formData.message}\n`
-  )}`;
+  const inquiryLinks = buildInquiryLinks(formData);
 
   return (
     <div className="flex flex-col h-full bg-slate-950/95 text-slate-100 font-sans select-text overflow-y-auto p-4 md:p-8">
@@ -161,7 +153,7 @@ export const ContactApp: React.FC = () => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                   <a
-                    href={whatsappInquiryUrl}
+                    href={inquiryLinks.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={playClick}
@@ -170,7 +162,7 @@ export const ContactApp: React.FC = () => {
                     <MessageCircle className="w-4 h-4" /> Send via WhatsApp
                   </a>
                   <a
-                    href={mailtoInquiryUrl}
+                    href={inquiryLinks.email}
                     onClick={playClick}
                     className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 px-5 rounded-lg border border-slate-700 transition-colors"
                   >

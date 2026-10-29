@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { bannerText, handleCommand, type CommandOutput } from '../../data/terminalCommands';
 import { playClick } from '../../utils/sound';
-import { Terminal, Maximize2, Minimize2, Trash2 } from 'lucide-react';
+import { Terminal, Trash2 } from 'lucide-react';
 
 interface TerminalAppProps {
   onHireClick?: () => void;

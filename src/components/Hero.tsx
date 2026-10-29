@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import { personalInfo } from '../data/portfolio';
 import { whatsappUrl } from '../utils/contact';
 import { ArrowRight, CheckCircle2, Zap, Shield, Cpu, MessageCircle } from 'lucide-react';
 
-interface HeroProps {
-  onOpenPalette: () => void;
-}
-
-export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
+export const Hero: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'performance' | 'stack' | 'it'>('performance');
 
   const waLink = whatsappUrl(

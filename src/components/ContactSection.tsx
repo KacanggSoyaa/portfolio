@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { personalInfo } from '../data/portfolio';
-import { whatsappUrl } from '../utils/contact';
+import { buildInquiryLinks, whatsappUrl } from '../utils/contact';
 import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
 
 interface ContactSectionProps {
@@ -31,20 +31,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
   };
 
-  const whatsappInquiryUrl = whatsappUrl(
-    `Hi Danis! My name is ${formData.name || 'there'}. I would like to inquire about ${formData.service}. Details: ${formData.message || 'Looking for a project consultation.'}`
-  );
-
-  const mailtoInquiryUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
-    `Project Inquiry: ${formData.service} (${formData.name})`
-  )}&body=${encodeURIComponent(
-    `Hi Danis,\n\nName: ${formData.name}\nEmail: ${formData.email}\nService: ${formData.service}\nBudget: ${formData.budget}\n\nProject Details:\n${formData.message}\n`
-  )}`;
+  const inquiryLinks = buildInquiryLinks(formData);
 
   return (
     <section id="contact" className="py-16 md:py-20 relative bg-slate-900/40">
@@ -171,7 +163,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                   <a
-                    href={whatsappInquiryUrl}
+                    href={inquiryLinks.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2.5 px-5 rounded-xl transition-all"
@@ -180,7 +172,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                   </a>
 
                   <a
-                    href={mailtoInquiryUrl}
+                    href={inquiryLinks.email}
                     className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 px-5 rounded-xl border border-slate-700 transition-all"
                   >
                     <Mail className="w-4 h-4" /> Open in Email App

@@ -16,7 +16,7 @@ import { ResumeApp } from '../apps/ResumeApp';
 import { playWindowOpen } from '../../utils/sound';
 
 export const Desktop: React.FC = () => {
-  const [topZ, setTopZ] = useState(10);
+  const [, setTopZ] = useState(10);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   // Initial window registry
@@ -291,8 +291,6 @@ export const Desktop: React.FC = () => {
         onFocus={() => bringToFront('terminal')}
       >
         <TerminalApp
-          onOpenProjects={() => openApp('projects')}
-          onOpenServices={() => openApp('services')}
           onHireClick={handleHireClick}
           onOpenPalette={() => setPaletteOpen(true)}
         />

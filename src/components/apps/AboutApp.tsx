@@ -162,20 +162,14 @@ export const AboutApp: React.FC<AboutAppProps> = ({ onHireClick, onOpenResume })
                   <h3 className="text-xs font-bold text-cyan-300 uppercase tracking-wider font-mono">
                     {group.category}
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {group.skills.map((skill) => (
-                      <div key={skill.name} className="space-y-1">
-                        <div className="flex justify-between text-xs">
-                          <span className="text-slate-200 font-medium">{skill.name}</span>
-                          <span className="text-cyan-400 font-mono text-[11px]">{skill.level}%</span>
-                        </div>
-                        <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-500"
-                            style={{ width: `${skill.level}%` }}
-                          />
-                        </div>
-                      </div>
+                      <span
+                        key={skill.name}
+                        className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800 text-slate-300"
+                      >
+                        {skill.name}
+                      </span>
                     ))}
                   </div>
                 </div>

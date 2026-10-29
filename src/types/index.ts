@@ -21,7 +21,6 @@ export interface Project {
   image: string;
   liveUrl?: string;
   githubUrl?: string;
-  featured: boolean;
   problem: string;
   solution: string;
 }
@@ -38,7 +37,7 @@ export interface Service {
 
 export interface SkillCategory {
   category: string;
-  skills: { name: string; level: number; icon?: string }[];
+  skills: { name: string }[];
 }
 
 export interface Experience {

@@ -7,14 +7,12 @@ interface TopBarProps {
   onOpenPalette: () => void;
   onHireClick: () => void;
   onOpenApp: (id: AppId) => void;
-  activeAppTitle?: string;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   onOpenPalette,
   onHireClick,
   onOpenApp,
-  activeAppTitle,
 }) => {
   const [time, setTime] = useState<string>('');
   const [soundOn, setSoundOn] = useState<boolean>(true);
