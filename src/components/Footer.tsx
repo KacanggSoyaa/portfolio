@@ -33,6 +33,9 @@ export const Footer: React.FC = () => {
             <a href="#contact" className="hover:text-cyan-400 transition-colors">
               Contact
             </a>
+            <a href="/os" className="hover:text-cyan-400 transition-colors">
+              Interactive OS
+            </a>
           </div>
 
           {/* Social Links */}
@@ -69,6 +72,8 @@ export const Footer: React.FC = () => {
             &copy; {new Date().getFullYear()} {personalInfo.name}. All rights reserved. Built with Astro, React, and Tailwind CSS.
           </div>
           <div className="flex items-center gap-2">
+            <span>{personalInfo.location}</span>
+            <span className="text-slate-700">&bull;</span>
             <span>Press</span>
             <kbd className="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400 font-mono">
               Ctrl+K

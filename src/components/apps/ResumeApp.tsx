@@ -1,6 +1,6 @@
 import React from 'react';
 import { personalInfo, experience, skillCategories, projects } from '../../data/portfolio';
-import { Download, Printer, ExternalLink, Mail, MapPin, Globe } from 'lucide-react';
+import { Download, Printer, Mail, MapPin, Globe } from 'lucide-react';
 import { playClick } from '../../utils/sound';
 
 export const ResumeApp: React.FC = () => {

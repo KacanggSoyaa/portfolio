@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://danisnazri.dev/sitemap-index.xml

@@ -32,6 +32,13 @@ export const PortfolioWebsite: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950 relative overflow-x-hidden">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-cyan-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-950"
+      >
+        Skip to content
+      </a>
+
       {/* Background Cyber Mesh Grid */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.03] z-0"
@@ -45,7 +52,7 @@ export const PortfolioWebsite: React.FC = () => {
       <Navbar onOpenPalette={() => setPaletteOpen(true)} />
 
       {/* Main Page Flow */}
-      <main className="relative z-10">
+      <main id="main-content" className="relative z-10">
         <Hero onOpenPalette={() => setPaletteOpen(true)} />
         <ServicesSection onSelectService={handleSelectService} />
         <ProjectsSection />

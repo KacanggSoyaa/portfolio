@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { personalInfo } from '../data/portfolio';
-import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
+import { whatsappUrl } from '../utils/contact';
+import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
 
 interface ContactSectionProps {
   selectedService?: string;
@@ -18,7 +19,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const cleanWaNumber = personalInfo.whatsapp.replace(/\D/g, '');
+  useEffect(() => {
+    if (selectedService) {
+      setFormData((prev) => ({ ...prev, service: selectedService }));
+    }
+  }, [selectedService]);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -31,9 +36,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
     setSubmitted(true);
   };
 
-  const whatsappInquiryUrl = `https://wa.me/${cleanWaNumber}?text=${encodeURIComponent(
+  const whatsappInquiryUrl = whatsappUrl(
     `Hi Danis! My name is ${formData.name || 'there'}. I would like to inquire about ${formData.service}. Details: ${formData.message || 'Looking for a project consultation.'}`
-  )}`;
+  );
 
   const mailtoInquiryUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
     `Project Inquiry: ${formData.service} (${formData.name})`
@@ -67,7 +72,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
 
               {/* WhatsApp Quick Chat */}
               <a
-                href={`https://wa.me/${cleanWaNumber}?text=${encodeURIComponent("Hi Danis, I saw your portfolio and would like to discuss a project.")}`}
+                href={whatsappUrl('Hi Danis, I saw your portfolio and would like to discuss a project.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between p-4 rounded-xl bg-slate-950/80 border border-slate-800 hover:border-emerald-700/60 transition-all group"
@@ -153,7 +158,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
           {/* Interactive Form Column */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="p-8 sm:p-10 rounded-2xl bg-slate-900/90 border border-slate-800 text-center space-y-5 shadow-xl">
+              <div role="status" className="p-8 sm:p-10 rounded-2xl bg-slate-900/90 border border-slate-800 text-center space-y-5 shadow-xl">
                 <div className="w-14 h-14 rounded-full bg-emerald-950 border border-emerald-700/60 flex items-center justify-center mx-auto text-emerald-400">
                   <CheckCircle2 className="w-7 h-7" />
                 </div>
@@ -196,10 +201,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Your Name</label>
+                    <label htmlFor="contact-name" className="block text-xs font-semibold text-slate-300 mb-1.5">Your Name</label>
                     <input
+                      id="contact-name"
                       type="text"
                       required
+                      autoComplete="name"
                       placeholder="Alex Smith"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -208,10 +215,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+                    <label htmlFor="contact-email" className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
                     <input
+                      id="contact-email"
                       type="email"
                       required
+                      autoComplete="email"
                       placeholder="alex@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -222,8 +231,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Service Needed</label>
+                    <label htmlFor="contact-service" className="block text-xs font-semibold text-slate-300 mb-1.5">Service Needed</label>
                     <select
+                      id="contact-service"
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
@@ -237,8 +247,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">Estimated Budget</label>
+                    <label htmlFor="contact-budget" className="block text-xs font-semibold text-slate-300 mb-1.5">Estimated Budget</label>
                     <select
+                      id="contact-budget"
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
@@ -253,8 +264,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Project Brief &amp; Goals</label>
+                  <label htmlFor="contact-message" className="block text-xs font-semibold text-slate-300 mb-1.5">Project Brief &amp; Goals</label>
                   <textarea
+                    id="contact-message"
                     required
                     rows={4}
                     placeholder="Briefly describe your project, timeline, or current website challenges..."

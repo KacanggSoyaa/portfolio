@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../../data/portfolio';
-import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck, Sparkles } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { playClick, playSuccess } from '../../utils/sound';
+import { whatsappUrl } from '../../utils/contact';
+import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
+import { playClick } from '../../utils/sound';
 
 export const ContactApp: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -25,22 +25,19 @@ export const ContactApp: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    playSuccess();
-
-    // Trigger confetti explosion
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#06b6d4', '#3b82f6', '#10b981'],
-    });
-
+    playClick();
     setSubmitted(true);
   };
 
-  const whatsappMessage = encodeURIComponent(
-    `Hi Danis! I saw your portfolio and would like to discuss a freelance project (${formData.service}).`
+  const whatsappInquiryUrl = whatsappUrl(
+    `Hi Danis! My name is ${formData.name || 'there'}. I would like to discuss ${formData.service}. Details: ${formData.message || 'Looking for a project consultation.'}`
   );
+
+  const mailtoInquiryUrl = `mailto:${personalInfo.email}?subject=${encodeURIComponent(
+    `Project Inquiry: ${formData.service} (${formData.name})`
+  )}&body=${encodeURIComponent(
+    `Hi Danis,\n\nName: ${formData.name}\nEmail: ${formData.email}\nService: ${formData.service}\nBudget: ${formData.budget}\n\nProject Details:\n${formData.message}\n`
+  )}`;
 
   return (
     <div className="flex flex-col h-full bg-slate-950/95 text-slate-100 font-sans select-text overflow-y-auto p-4 md:p-8">
@@ -48,8 +45,8 @@ export const ContactApp: React.FC = () => {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/80 border border-cyan-800/60 text-cyan-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            Taking on 2 New Projects this Month
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Available for select projects
           </div>
           <h1 className="text-xl md:text-2xl font-bold text-white">Let's Build Something Exceptional</h1>
           <p className="text-xs md:text-sm text-slate-400 max-w-lg mx-auto">
@@ -67,7 +64,7 @@ export const ContactApp: React.FC = () => {
 
               {/* WhatsApp Quick Chat */}
               <a
-                href={`https://wa.me/60123456789?text=${whatsappMessage}`}
+                href={whatsappUrl('Hi Danis! I saw your portfolio and would like to discuss a freelance project.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={playClick}
@@ -151,25 +148,43 @@ export const ContactApp: React.FC = () => {
           {/* Interactive Form Column */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="p-8 rounded-2xl bg-slate-900/80 border border-cyan-800/60 text-center space-y-4 shadow-xl">
+              <div
+                role="status"
+                className="p-8 rounded-2xl bg-slate-900/80 border border-cyan-800/60 text-center space-y-4 shadow-xl"
+              >
                 <div className="w-14 h-14 rounded-full bg-cyan-950 border border-cyan-500/50 flex items-center justify-center mx-auto text-cyan-400">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-white">Inquiry Received!</h3>
+                <h3 className="text-lg font-bold text-white">Inquiry Details Prepared</h3>
                 <p className="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
-                  Thank you, <strong className="text-white">{formData.name}</strong>. I've received your message regarding <em>{formData.service}</em> and will review your specifications right away.
+                  Thank you, <strong className="text-white">{formData.name}</strong>. Choose a channel below to send your inquiry about <em>{formData.service}</em> directly.
                 </p>
-                <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 max-w-sm mx-auto text-xs text-cyan-400">
-                  I will follow up at <strong>{formData.email}</strong> within 2-4 hours.
+                <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                  <a
+                    href={whatsappInquiryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={playClick}
+                    className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs py-2.5 px-5 rounded-lg transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Send via WhatsApp
+                  </a>
+                  <a
+                    href={mailtoInquiryUrl}
+                    onClick={playClick}
+                    className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs py-2.5 px-5 rounded-lg border border-slate-700 transition-colors"
+                  >
+                    <Mail className="w-4 h-4" /> Open in Email App
+                  </a>
                 </div>
                 <button
                   onClick={() => {
                     playClick();
                     setSubmitted(false);
                   }}
-                  className="mt-4 text-xs text-slate-400 hover:text-white underline"
+                  className="mt-2 text-xs text-slate-400 hover:text-white underline"
                 >
-                  Send another inquiry
+                  Edit message
                 </button>
               </div>
             ) : (

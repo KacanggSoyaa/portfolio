@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#020617"/>
+      <stop offset="0.55" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#061a24"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#3b82f6"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#94a3b8" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1050" cy="90" r="280" fill="#06b6d4" opacity="0.10"/>
+  <circle cx="150" cy="560" r="220" fill="#3b82f6" opacity="0.08"/>
+
+  <rect x="80" y="76" width="88" height="88" rx="22" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+  <text x="124" y="137" font-family="Consolas, 'Courier New', monospace" font-size="34" font-weight="700" fill="#22d3ee" text-anchor="middle">DN</text>
+
+  <text x="196" y="118" font-family="'Segoe UI', Arial, sans-serif" font-size="22" font-weight="600" fill="#94a3b8" letter-spacing="4">PORTFOLIO</text>
+  <text x="196" y="150" font-family="'Segoe UI', Arial, sans-serif" font-size="20" fill="#64748b">danisnazri.dev</text>
+
+  <text x="80" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="72" font-weight="800" fill="#f8fafc">Danis Nazri</text>
+
+  <text x="80" y="370" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="600" fill="#22d3ee">Full-Stack Web Developer</text>
+  <text x="80" y="416" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="600" fill="#e2e8f0">&amp; IT Solutions Specialist</text>
+
+  <text x="80" y="482" font-family="'Segoe UI', Arial, sans-serif" font-size="22" fill="#94a3b8">High-performance websites, web applications, and resilient cloud deployments.</text>
+
+  <rect x="80" y="530" width="220" height="8" rx="4" fill="url(#accent)"/>
+
+  <g font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#64748b">
+    <text x="80" y="590">Astro</text>
+    <text x="150" y="590">React</text>
+    <text x="230" y="590">TypeScript</text>
+    <text x="350" y="590">Tailwind CSS</text>
+    <text x="490" y="590">PostgreSQL</text>
+    <text x="620" y="590">Cloudflare</text>
+  </g>
+
+  <text x="1120" y="590" font-family="Consolas, 'Courier New', monospace" font-size="18" fill="#22d3ee" text-anchor="end">Kuala Lumpur, MY</text>
+</svg>

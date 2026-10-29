@@ -23,8 +23,11 @@ export const AboutSection: React.FC = () => {
 
         {/* Navigation Tabs */}
         <div className="flex justify-center">
-          <div className="flex space-x-2 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl">
+          <div role="tablist" aria-label="About sections" className="flex space-x-2 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl">
             <button
+              role="tab"
+              aria-selected={activeTab === 'story'}
+              aria-controls="about-panel-story"
               onClick={() => setActiveTab('story')}
               className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === 'story'
@@ -35,6 +38,9 @@ export const AboutSection: React.FC = () => {
               <User className="w-4 h-4" /> Story &amp; Philosophy
             </button>
             <button
+              role="tab"
+              aria-selected={activeTab === 'skills'}
+              aria-controls="about-panel-skills"
               onClick={() => setActiveTab('skills')}
               className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === 'skills'
@@ -50,7 +56,7 @@ export const AboutSection: React.FC = () => {
         {/* Tab Panels */}
         <div className="max-w-4xl mx-auto bg-slate-900/50 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-xl">
           {activeTab === 'story' && (
-            <div className="space-y-6">
+            <div role="tabpanel" id="about-panel-story" className="space-y-6">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 border-b border-slate-800 pb-6">
                 <div className="w-20 h-20 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center font-mono font-bold text-2xl text-cyan-400 shadow-md">
                   DN
@@ -99,7 +105,7 @@ export const AboutSection: React.FC = () => {
           )}
 
           {activeTab === 'skills' && (
-            <div className="space-y-6">
+            <div role="tabpanel" id="about-panel-skills" className="space-y-6">
               <p className="text-xs sm:text-sm text-slate-400">
                 A structured overview of technical skills, frameworks, and deployment technologies utilized across production projects:
               </p>
@@ -111,20 +117,14 @@ export const AboutSection: React.FC = () => {
                       {group.category}
                     </h4>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div className="flex flex-wrap gap-2">
                       {group.skills.map((skill) => (
-                        <div key={skill.name} className="space-y-1">
-                          <div className="flex justify-between text-xs">
-                            <span className="text-slate-300 font-medium">{skill.name}</span>
-                            <span className="text-cyan-400 font-mono text-[11px]">{skill.level}%</span>
-                          </div>
-                          <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-cyan-400"
-                              style={{ width: `${skill.level}%` }}
-                            />
-                          </div>
-                        </div>
+                        <span
+                          key={skill.name}
+                          className="text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300"
+                        >
+                          {skill.name}
+                        </span>
                       ))}
                     </div>
                   </div>

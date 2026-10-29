@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import type { AppId } from '../../types';
 import { Volume2, VolumeX, Search, Sparkles, Terminal, Wifi, BatteryCharging } from 'lucide-react';
 import { isSoundEnabled, toggleSound, playClick } from '../../utils/sound';
 
 interface TopBarProps {
   onOpenPalette: () => void;
   onHireClick: () => void;
-  onOpenApp: (id: any) => void;
+  onOpenApp: (id: AppId) => void;
   activeAppTitle?: string;
 }
 

@@ -15,9 +15,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   const navLinks = [
     { label: 'Services', href: '#services' },
@@ -38,7 +49,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand */}
         <a
-          href="#"
+          href="/"
+          aria-label={`${personalInfo.name} — home`}
           className="flex items-center gap-3 group text-white font-medium text-sm tracking-tight"
         >
           <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-cyan-500/50 flex items-center justify-center font-mono text-xs font-bold text-cyan-400 transition-colors">
@@ -55,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
         </a>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 bg-slate-900/70 backdrop-blur border border-slate-800/80 px-4 py-1.5 rounded-full">
+        <nav aria-label="Primary" className="hidden md:flex items-center space-x-1 bg-slate-900/70 backdrop-blur border border-slate-800/80 px-4 py-1.5 rounded-full">
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -102,6 +114,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -110,7 +124,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenPalette }) => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-950/95 backdrop-blur-lg border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 mt-2">
+        <div
+          id="mobile-menu"
+          className="md:hidden bg-slate-950/95 backdrop-blur-lg border-b border-slate-800 px-4 pt-3 pb-6 space-y-2 mt-2"
+        >
           {navLinks.map((link) => (
             <a
               key={link.label}

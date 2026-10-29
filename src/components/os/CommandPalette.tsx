@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { AppId } from '../../types';
 import { Search, Sparkles, FolderGit2, Layers, User, MessageSquare, Terminal, FileText, ExternalLink, Copy, Check, Volume2 } from 'lucide-react';
 import { personalInfo } from '../../data/portfolio';
+import { whatsappUrl } from '../../utils/contact';
 import { playClick, toggleSound } from '../../utils/sound';
 
 interface CommandPaletteProps {
@@ -29,13 +30,28 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const onCloseRef = useRef(onClose);
 
   useEffect(() => {
-    if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setQuery('');
+    setSelectedIndex(0);
+    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCloseRef.current();
+    };
+    document.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      clearTimeout(focusTimer);
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
   }, [isOpen]);
 
   const actions: PaletteAction[] = [
@@ -101,7 +117,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
     {
       id: 'action-copy-email',
-      title: 'Copy Email Address (danis.devwork@gmail.com)',
+      title: `Copy Email Address (${personalInfo.email})`,
       category: 'Actions',
       icon: copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-cyan-400" />,
       perform: () => {
@@ -122,21 +138,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
     {
       id: 'link-whatsapp',
-      title: 'Open WhatsApp Direct Chat (+60123456789)',
+      title: `Open WhatsApp Direct Chat (${personalInfo.whatsapp})`,
       category: 'Links',
       icon: <ExternalLink className="w-4 h-4 text-emerald-400" />,
       perform: () => {
-        window.open('https://wa.me/60123456789', '_blank');
+        window.open(whatsappUrl(), '_blank', 'noopener,noreferrer');
         onClose();
       },
     },
     {
       id: 'link-github',
-      title: 'Open GitHub Profile (@danisdev)',
+      title: 'Open GitHub Profile',
       category: 'Links',
       icon: <ExternalLink className="w-4 h-4 text-slate-300" />,
       perform: () => {
-        window.open(personalInfo.github, '_blank');
+        window.open(personalInfo.github, '_blank', 'noopener,noreferrer');
         onClose();
       },
     },
@@ -173,6 +189,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-20 px-4 animate-in fade-in duration-150"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="DanisOS command palette"
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden text-slate-100 ring-1 ring-cyan-500/20"
       >

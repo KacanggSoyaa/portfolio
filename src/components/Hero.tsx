@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../data/portfolio';
-import { ArrowRight, Download, CheckCircle2, Zap, Shield, Cpu, ExternalLink, MessageCircle } from 'lucide-react';
+import { whatsappUrl } from '../utils/contact';
+import { ArrowRight, CheckCircle2, Zap, Shield, Cpu, MessageCircle } from 'lucide-react';
 
 interface HeroProps {
   onOpenPalette: () => void;
@@ -9,9 +10,9 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
   const [activeTab, setActiveTab] = useState<'performance' | 'stack' | 'it'>('performance');
 
-  const waLink = `https://wa.me/${personalInfo.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(
-    "Hi Danis, I saw your portfolio and would like to discuss a web project."
-  )}`;
+  const waLink = whatsappUrl(
+    'Hi Danis, I saw your portfolio and would like to discuss a web project.'
+  );
 
   return (
     <section className="relative pt-28 pb-14 md:pt-36 md:pb-20 overflow-hidden">
@@ -72,16 +73,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
             {/* Key Performance Indicators Bar */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800/80 max-w-lg mx-auto lg:mx-0">
               <div className="text-center lg:text-left">
-                <div className="text-xl sm:text-2xl font-bold text-white font-mono">100/100</div>
-                <div className="text-[11px] text-slate-400">Lighthouse Speed</div>
+                <div className="text-xl sm:text-2xl font-bold text-white font-mono">95+</div>
+                <div className="text-[11px] text-slate-400">Lighthouse Target</div>
               </div>
               <div className="text-center lg:text-left">
                 <div className="text-xl sm:text-2xl font-bold text-cyan-400 font-mono">3–10 Days</div>
-                <div className="text-[11px] text-slate-400">Average Delivery</div>
+                <div className="text-[11px] text-slate-400">Typical Delivery</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-xl sm:text-2xl font-bold text-emerald-400 font-mono">100%</div>
-                <div className="text-[11px] text-slate-400">Client Satisfaction</div>
+                <div className="text-xl sm:text-2xl font-bold text-emerald-400 font-mono">1:1</div>
+                <div className="text-[11px] text-slate-400">Direct Collaboration</div>
               </div>
             </div>
           </div>
@@ -106,8 +107,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
               </div>
 
               {/* Showcase Navigation Tabs */}
-              <div className="grid grid-cols-3 border-b border-slate-800/80 bg-slate-950/40 text-xs">
+              <div
+                role="tablist"
+                aria-label="Engineering standards"
+                className="grid grid-cols-3 border-b border-slate-800/80 bg-slate-950/40 text-xs"
+              >
                 <button
+                  role="tab"
+                  aria-selected={activeTab === 'performance'}
+                  aria-controls="hero-panel-performance"
                   onClick={() => setActiveTab('performance')}
                   className={`py-2.5 px-3 font-medium transition-colors flex items-center justify-center gap-1.5 ${
                     activeTab === 'performance'
@@ -118,6 +126,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
                   <Zap className="w-3.5 h-3.5" /> Speed & SEO
                 </button>
                 <button
+                  role="tab"
+                  aria-selected={activeTab === 'stack'}
+                  aria-controls="hero-panel-stack"
                   onClick={() => setActiveTab('stack')}
                   className={`py-2.5 px-3 font-medium transition-colors flex items-center justify-center gap-1.5 ${
                     activeTab === 'stack'
@@ -128,6 +139,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
                   <Cpu className="w-3.5 h-3.5" /> Stack
                 </button>
                 <button
+                  role="tab"
+                  aria-selected={activeTab === 'it'}
+                  aria-controls="hero-panel-it"
                   onClick={() => setActiveTab('it')}
                   className={`py-2.5 px-3 font-medium transition-colors flex items-center justify-center gap-1.5 ${
                     activeTab === 'it'
@@ -142,33 +156,37 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
               {/* Tab Contents */}
               <div className="p-5 sm:p-6 space-y-4">
                 {activeTab === 'performance' && (
-                  <div className="space-y-4">
+                  <div
+                    role="tabpanel"
+                    id="hero-panel-performance"
+                    className="space-y-4"
+                  >
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800/60">
                       <div>
-                        <div className="text-xs font-semibold text-white">Google Lighthouse Audit</div>
-                        <div className="text-[11px] text-slate-400">Core Web Vitals Benchmarked</div>
+                        <div className="text-xs font-semibold text-white">Performance Standards</div>
+                        <div className="text-[11px] text-slate-400">Core Web Vitals targets</div>
                       </div>
                       <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-800/60 text-emerald-400 font-bold">
-                        99 - 100 Score
+                        95+ Target
                       </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                         <div className="text-slate-400 text-[11px]">First Contentful Paint</div>
-                        <div className="text-emerald-400 font-mono font-bold text-sm">0.4s (Instant)</div>
+                        <div className="text-emerald-400 font-mono font-bold text-sm">Sub-1s target</div>
                       </div>
                       <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                         <div className="text-slate-400 text-[11px]">Cumulative Layout Shift</div>
-                        <div className="text-emerald-400 font-mono font-bold text-sm">0.00 (Zero Shift)</div>
+                        <div className="text-emerald-400 font-mono font-bold text-sm">Near-zero target</div>
                       </div>
                       <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                         <div className="text-slate-400 text-[11px]">Search Engine Optimization</div>
-                        <div className="text-cyan-400 font-mono font-bold text-sm">100 / 100 Ready</div>
+                        <div className="text-cyan-400 font-mono font-bold text-sm">Semantic &amp; structured</div>
                       </div>
                       <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1">
                         <div className="text-slate-400 text-[11px]">Mobile Responsiveness</div>
-                        <div className="text-cyan-400 font-mono font-bold text-sm">Fluid 100%</div>
+                        <div className="text-cyan-400 font-mono font-bold text-sm">Mobile-first</div>
                       </div>
                     </div>
 
@@ -179,7 +197,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
                 )}
 
                 {activeTab === 'stack' && (
-                  <div className="space-y-4">
+                  <div role="tabpanel" id="hero-panel-stack" className="space-y-4">
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-white">Modern Engineering Foundation</div>
                       <div className="text-[11px] text-slate-400">Standardized on industry-leading web frameworks</div>
@@ -207,7 +225,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenPalette }) => {
                 )}
 
                 {activeTab === 'it' && (
-                  <div className="space-y-4">
+                  <div role="tabpanel" id="hero-panel-it" className="space-y-4">
                     <div className="space-y-1">
                       <div className="text-xs font-semibold text-white">IT &amp; Systems Specialization</div>
                       <div className="text-[11px] text-slate-400">Bridging software development with deployment infrastructure</div>

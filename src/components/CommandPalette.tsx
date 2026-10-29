@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Sparkles, FolderGit2, Layers, User, Briefcase, ExternalLink, Copy, Check, MessageSquare } from 'lucide-react';
+import { Search, Sparkles, FolderGit2, Layers, User, Briefcase, ExternalLink, Copy, Check, MessageSquare, X } from 'lucide-react';
 import { personalInfo } from '../data/portfolio';
+import { whatsappUrl } from '../utils/contact';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -20,21 +21,62 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
 
   useEffect(() => {
-    if (isOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    setQuery('');
+    setSelectedIndex(0);
+    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCloseRef.current();
+        return;
+      }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleGlobalKeyDown);
+
+    return () => {
+      clearTimeout(focusTimer);
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
   }, [isOpen]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     onClose();
   };
-
-  const cleanWaNumber = personalInfo.whatsapp.replace(/\D/g, '');
 
   const actions: PaletteAction[] = [
     {
@@ -73,6 +115,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       perform: () => scrollTo('experience'),
     },
     {
+      id: 'nav-os',
+      title: 'Open Interactive OS Portfolio',
+      category: 'Navigation',
+      icon: <ExternalLink className="w-4 h-4 text-cyan-400" />,
+      perform: () => {
+        window.location.href = '/os';
+      },
+    },
+    {
       id: 'act-copy-email',
       title: `Copy Email Address (${personalInfo.email})`,
       category: 'Actions',
@@ -89,7 +140,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       category: 'Social',
       icon: <MessageSquare className="w-4 h-4 text-emerald-400" />,
       perform: () => {
-        window.open(`https://wa.me/${cleanWaNumber}`, '_blank');
+        window.open(whatsappUrl(), '_blank', 'noopener,noreferrer');
         onClose();
       },
     },
@@ -99,7 +150,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       category: 'Social',
       icon: <ExternalLink className="w-4 h-4 text-slate-400" />,
       perform: () => {
-        window.open(personalInfo.github, '_blank');
+        window.open(personalInfo.github, '_blank', 'noopener,noreferrer');
         onClose();
       },
     },
@@ -109,7 +160,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       category: 'Social',
       icon: <ExternalLink className="w-4 h-4 text-blue-400" />,
       perform: () => {
-        window.open(personalInfo.linkedin, '_blank');
+        window.open(personalInfo.linkedin, '_blank', 'noopener,noreferrer');
         onClose();
       },
     },
@@ -145,6 +196,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
         className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col font-sans"
         onClick={(e) => e.stopPropagation()}
       >
@@ -154,6 +209,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="palette-results"
+            aria-label="Search commands"
+            aria-activedescendant={
+              filtered[selectedIndex] ? `palette-option-${filtered[selectedIndex].id}` : undefined
+            }
             placeholder="Type a command or jump to section..."
             value={query}
             onChange={(e) => {
@@ -163,13 +225,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             onKeyDown={handleKeyDown}
             className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
           />
-          <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-            ESC
-          </kbd>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close command palette"
+            className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Action List */}
-        <div className="max-h-80 overflow-y-auto p-2 space-y-1">
+        <div id="palette-results" role="listbox" aria-label="Commands" className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
             <div className="p-4 text-center text-xs text-slate-500">
               No matching commands found.
@@ -178,6 +245,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
             filtered.map((action, idx) => (
               <button
                 key={action.id}
+                id={`palette-option-${action.id}`}
+                role="option"
+                aria-selected={idx === selectedIndex}
                 onClick={() => action.perform()}
                 onMouseEnter={() => setSelectedIndex(idx)}
                 className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left text-xs transition-colors ${
