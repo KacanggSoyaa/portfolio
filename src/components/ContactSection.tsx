@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { personalInfo } from '../data/portfolio';
 import { buildInquiryLinks, whatsappUrl } from '../utils/contact';
+import { copyText } from '../utils/clipboard';
 import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
 
 interface ContactSectionProps {
@@ -25,8 +26,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
     }
   }, [selectedService]);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(personalInfo.email);
+  const handleCopyEmail = async () => {
+    if (!(await copyText(personalInfo.email))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -198,6 +199,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                       id="contact-name"
                       type="text"
                       required
+                      maxLength={80}
                       autoComplete="name"
                       placeholder="Alex Smith"
                       value={formData.name}
@@ -212,6 +214,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                       id="contact-email"
                       type="email"
                       required
+                      maxLength={254}
                       autoComplete="email"
                       placeholder="alex@company.com"
                       value={formData.email}
@@ -260,6 +263,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ selectedService 
                   <textarea
                     id="contact-message"
                     required
+                    maxLength={2000}
                     rows={4}
                     placeholder="Briefly describe your project, timeline, or current website challenges..."
                     value={formData.message}

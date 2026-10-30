@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, Sparkles, FolderGit2, Layers, User, Briefcase, ExternalLink, Copy, Check, MessageSquare, X } from 'lucide-react';
 import { personalInfo } from '../data/portfolio';
 import { whatsappUrl } from '../utils/contact';
+import { copyText } from '../utils/clipboard';
 import { useCommandPalette, type PaletteItem } from '../hooks/useCommandPalette';
 
 interface CommandPaletteProps {
@@ -72,9 +73,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen, onClose 
       category: 'Actions',
       icon: copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-cyan-400" />,
       perform: () => {
-        navigator.clipboard.writeText(personalInfo.email);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        void copyText(personalInfo.email).then((ok) => {
+          if (!ok) return;
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
       },
     },
     {

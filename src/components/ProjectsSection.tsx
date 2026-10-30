@@ -12,7 +12,7 @@ export const ProjectsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const categories = ['All', 'Full-Stack', 'Web Dev', 'IT Systems'];
+  const categories = ['All', 'Full-Stack', 'Frontend', 'Web Dev', 'IT Systems', 'Mobile'];
 
   const filteredProjects = projects.filter((project) => {
     const matchesCategory = selectedCategory === 'All' || project.category === selectedCategory;
@@ -80,14 +80,25 @@ export const ProjectsSection: React.FC = () => {
             >
               {/* Project Visual / Thumbnail */}
               <div className="relative aspect-[16/9] overflow-hidden bg-slate-950">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                />
+                {project.image ? (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-slate-900/80 border-b border-slate-800">
+                    <div className="w-12 h-12 rounded-xl border-2 border-dashed border-slate-700 flex items-center justify-center text-slate-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3 9.75h18M3 12.75h18" />
+                      </svg>
+                    </div>
+                    <span className="text-xs text-slate-600 font-mono">Screenshot coming soon</span>
+                  </div>
+                )}
                 <div className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono border border-slate-800 text-slate-300">
                   {project.category}
                 </div>

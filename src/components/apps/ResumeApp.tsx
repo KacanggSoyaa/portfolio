@@ -56,7 +56,7 @@ export const ResumeApp: React.FC = () => {
               <a
                 href={personalInfo.github}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="flex items-center gap-1 text-cyan-700 hover:underline"
               >
                 <Globe className="w-3.5 h-3.5" /> GitHub

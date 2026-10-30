@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { personalInfo } from '../../data/portfolio';
 import { buildInquiryLinks, whatsappUrl } from '../../utils/contact';
+import { copyText } from '../../utils/clipboard';
 import { Mail, MessageCircle, Send, CheckCircle2, Copy, Check, Clock, ShieldCheck } from 'lucide-react';
 import { playClick } from '../../utils/sound';
 
@@ -16,9 +17,9 @@ export const ContactApp: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleCopyEmail = () => {
+  const handleCopyEmail = async () => {
     playClick();
-    navigator.clipboard.writeText(personalInfo.email);
+    if (!(await copyText(personalInfo.email))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -190,6 +191,8 @@ export const ContactApp: React.FC = () => {
                     <input
                       type="text"
                       required
+                      maxLength={80}
+                      autoComplete="name"
                       placeholder="Jane Doe"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -202,6 +205,8 @@ export const ContactApp: React.FC = () => {
                     <input
                       type="email"
                       required
+                      maxLength={254}
+                      autoComplete="email"
                       placeholder="jane@company.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -246,6 +251,7 @@ export const ContactApp: React.FC = () => {
                   <label className="block text-xs font-medium text-slate-300 mb-1">Project Details & Goals</label>
                   <textarea
                     required
+                    maxLength={2000}
                     rows={4}
                     placeholder="Briefly describe what you want to achieve, any deadline, or reference websites..."
                     value={formData.message}

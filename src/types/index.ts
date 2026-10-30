@@ -16,9 +16,9 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  category: 'Full-Stack' | 'Frontend' | 'Web Dev' | 'IT Systems';
+  category: 'Full-Stack' | 'Frontend' | 'Web Dev' | 'IT Systems' | 'Mobile';
   tags: string[];
-  image: string;
+  image?: string;
   liveUrl?: string;
   githubUrl?: string;
   problem: string;

@@ -3,6 +3,7 @@ import type { AppId } from '../../types';
 import { Search, Sparkles, FolderGit2, Layers, User, Terminal, FileText, ExternalLink, Copy, Check, Volume2 } from 'lucide-react';
 import { personalInfo } from '../../data/portfolio';
 import { whatsappUrl } from '../../utils/contact';
+import { copyText } from '../../utils/clipboard';
 import { playClick, toggleSound } from '../../utils/sound';
 import { useCommandPalette, type PaletteItem } from '../../hooks/useCommandPalette';
 
@@ -92,9 +93,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'Actions',
       icon: copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-cyan-400" />,
       perform: () => {
-        navigator.clipboard.writeText(personalInfo.email);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        void copyText(personalInfo.email).then((ok) => {
+          if (!ok) return;
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
       },
     },
     {
